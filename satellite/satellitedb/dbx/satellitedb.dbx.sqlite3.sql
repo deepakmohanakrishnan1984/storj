@@ -217,6 +217,17 @@ CREATE TABLE used_serials (
 	storage_node_id BLOB NOT NULL,
 	PRIMARY KEY ( serial_number_id, storage_node_id )
 );
+CREATE TABLE user_credits (
+	user_id BLOB NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	offer_id INTEGER NOT NULL REFERENCES offers( id ) ON DELETE CASCADE,
+	referred_by BLOB NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	credits_earned INTEGER NOT NULL,
+	credits_used INTEGER NOT NULL,
+	credits_type TEXT NOT NULL,
+	expires_at TIMESTAMP NOT NULL,
+	created_at TIMESTAMP NOT NULL,
+	PRIMARY KEY ( user_id )
+);
 CREATE INDEX bucket_name_project_id_interval_start_interval_seconds ON bucket_bandwidth_rollups ( bucket_name, project_id, interval_start, interval_seconds );
 CREATE UNIQUE INDEX bucket_id_rollup ON bucket_usages ( bucket_id, rollup_end_time );
 CREATE INDEX node_last_ip ON nodes ( last_ip );

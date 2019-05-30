@@ -489,6 +489,17 @@ CREATE TABLE used_serials (
 	storage_node_id bytea NOT NULL,
 	PRIMARY KEY ( serial_number_id, storage_node_id )
 );
+CREATE TABLE user_credits (
+	user_id bytea NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	offer_id integer NOT NULL REFERENCES offers( id ) ON DELETE CASCADE,
+	referred_by bytea NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	credits_earned integer NOT NULL,
+	credits_used integer NOT NULL,
+	credits_type text NOT NULL,
+	expires_at timestamp with time zone NOT NULL,
+	created_at timestamp with time zone NOT NULL,
+	PRIMARY KEY ( user_id )
+);
 CREATE INDEX bucket_name_project_id_interval_start_interval_seconds ON bucket_bandwidth_rollups ( bucket_name, project_id, interval_start, interval_seconds );
 CREATE UNIQUE INDEX bucket_id_rollup ON bucket_usages ( bucket_id, rollup_end_time );
 CREATE INDEX node_last_ip ON nodes ( last_ip );
@@ -774,6 +785,17 @@ CREATE TABLE used_serials (
 	serial_number_id INTEGER NOT NULL REFERENCES serial_numbers( id ) ON DELETE CASCADE,
 	storage_node_id BLOB NOT NULL,
 	PRIMARY KEY ( serial_number_id, storage_node_id )
+);
+CREATE TABLE user_credits (
+	user_id BLOB NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	offer_id INTEGER NOT NULL REFERENCES offers( id ) ON DELETE CASCADE,
+	referred_by BLOB NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	credits_earned INTEGER NOT NULL,
+	credits_used INTEGER NOT NULL,
+	credits_type TEXT NOT NULL,
+	expires_at TIMESTAMP NOT NULL,
+	created_at TIMESTAMP NOT NULL,
+	PRIMARY KEY ( user_id )
 );
 CREATE INDEX bucket_name_project_id_interval_start_interval_seconds ON bucket_bandwidth_rollups ( bucket_name, project_id, interval_start, interval_seconds );
 CREATE UNIQUE INDEX bucket_id_rollup ON bucket_usages ( bucket_id, rollup_end_time );
@@ -4084,6 +4106,174 @@ func (f UsedSerial_StorageNodeId_Field) value() interface{} {
 
 func (UsedSerial_StorageNodeId_Field) _Column() string { return "storage_node_id" }
 
+type UserCredit struct {
+	UserId        []byte
+	OfferId       int
+	ReferredBy    []byte
+	CreditsEarned int
+	CreditsUsed   int
+	CreditsType   string
+	ExpiresAt     time.Time
+	CreatedAt     time.Time
+}
+
+func (UserCredit) _Table() string { return "user_credits" }
+
+type UserCredit_Update_Fields struct {
+}
+
+type UserCredit_UserId_Field struct {
+	_set   bool
+	_null  bool
+	_value []byte
+}
+
+func UserCredit_UserId(v []byte) UserCredit_UserId_Field {
+	return UserCredit_UserId_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_UserId_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_UserId_Field) _Column() string { return "user_id" }
+
+type UserCredit_OfferId_Field struct {
+	_set   bool
+	_null  bool
+	_value int
+}
+
+func UserCredit_OfferId(v int) UserCredit_OfferId_Field {
+	return UserCredit_OfferId_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_OfferId_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_OfferId_Field) _Column() string { return "offer_id" }
+
+type UserCredit_ReferredBy_Field struct {
+	_set   bool
+	_null  bool
+	_value []byte
+}
+
+func UserCredit_ReferredBy(v []byte) UserCredit_ReferredBy_Field {
+	return UserCredit_ReferredBy_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_ReferredBy_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_ReferredBy_Field) _Column() string { return "referred_by" }
+
+type UserCredit_CreditsEarned_Field struct {
+	_set   bool
+	_null  bool
+	_value int
+}
+
+func UserCredit_CreditsEarned(v int) UserCredit_CreditsEarned_Field {
+	return UserCredit_CreditsEarned_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_CreditsEarned_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_CreditsEarned_Field) _Column() string { return "credits_earned" }
+
+type UserCredit_CreditsUsed_Field struct {
+	_set   bool
+	_null  bool
+	_value int
+}
+
+func UserCredit_CreditsUsed(v int) UserCredit_CreditsUsed_Field {
+	return UserCredit_CreditsUsed_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_CreditsUsed_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_CreditsUsed_Field) _Column() string { return "credits_used" }
+
+type UserCredit_CreditsType_Field struct {
+	_set   bool
+	_null  bool
+	_value string
+}
+
+func UserCredit_CreditsType(v string) UserCredit_CreditsType_Field {
+	return UserCredit_CreditsType_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_CreditsType_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_CreditsType_Field) _Column() string { return "credits_type" }
+
+type UserCredit_ExpiresAt_Field struct {
+	_set   bool
+	_null  bool
+	_value time.Time
+}
+
+func UserCredit_ExpiresAt(v time.Time) UserCredit_ExpiresAt_Field {
+	return UserCredit_ExpiresAt_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_ExpiresAt_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_ExpiresAt_Field) _Column() string { return "expires_at" }
+
+type UserCredit_CreatedAt_Field struct {
+	_set   bool
+	_null  bool
+	_value time.Time
+}
+
+func UserCredit_CreatedAt(v time.Time) UserCredit_CreatedAt_Field {
+	return UserCredit_CreatedAt_Field{_set: true, _value: v}
+}
+
+func (f UserCredit_CreatedAt_Field) value() interface{} {
+	if !f._set || f._null {
+		return nil
+	}
+	return f._value
+}
+
+func (UserCredit_CreatedAt_Field) _Column() string { return "created_at" }
+
 func toUTC(t time.Time) time.Time {
 	return t.UTC()
 }
@@ -5985,6 +6175,81 @@ func (obj *postgresImpl) All_Offer(ctx context.Context) (
 
 }
 
+func (obj *postgresImpl) All_UserCredit(ctx context.Context) (
+	rows []*UserCredit, err error) {
+
+	var __embed_stmt = __sqlbundle_Literal("SELECT user_credits.user_id, user_credits.offer_id, user_credits.referred_by, user_credits.credits_earned, user_credits.credits_used, user_credits.credits_type, user_credits.expires_at, user_credits.created_at FROM user_credits")
+
+	var __values []interface{}
+	__values = append(__values)
+
+	var __stmt = __sqlbundle_Render(obj.dialect, __embed_stmt)
+	obj.logStmt(__stmt, __values...)
+
+	__rows, err := obj.driver.Query(__stmt, __values...)
+	if err != nil {
+		return nil, obj.makeErr(err)
+	}
+	defer __rows.Close()
+
+	for __rows.Next() {
+		user_credit := &UserCredit{}
+		err = __rows.Scan(&user_credit.UserId, &user_credit.OfferId, &user_credit.ReferredBy, &user_credit.CreditsEarned, &user_credit.CreditsUsed, &user_credit.CreditsType, &user_credit.ExpiresAt, &user_credit.CreatedAt)
+		if err != nil {
+			return nil, obj.makeErr(err)
+		}
+		rows = append(rows, user_credit)
+	}
+	if err := __rows.Err(); err != nil {
+		return nil, obj.makeErr(err)
+	}
+	return rows, nil
+
+}
+
+func (obj *postgresImpl) Get_UserCredit_By_OfferId(ctx context.Context,
+	user_credit_offer_id UserCredit_OfferId_Field) (
+	user_credit *UserCredit, err error) {
+
+	var __embed_stmt = __sqlbundle_Literal("SELECT user_credits.user_id, user_credits.offer_id, user_credits.referred_by, user_credits.credits_earned, user_credits.credits_used, user_credits.credits_type, user_credits.expires_at, user_credits.created_at FROM user_credits WHERE user_credits.offer_id = ? LIMIT 2")
+
+	var __values []interface{}
+	__values = append(__values, user_credit_offer_id.value())
+
+	var __stmt = __sqlbundle_Render(obj.dialect, __embed_stmt)
+	obj.logStmt(__stmt, __values...)
+
+	__rows, err := obj.driver.Query(__stmt, __values...)
+	if err != nil {
+		return nil, obj.makeErr(err)
+	}
+	defer __rows.Close()
+
+	if !__rows.Next() {
+		if err := __rows.Err(); err != nil {
+			return nil, obj.makeErr(err)
+		}
+		return nil, makeErr(sql.ErrNoRows)
+	}
+
+	user_credit = &UserCredit{}
+	err = __rows.Scan(&user_credit.UserId, &user_credit.OfferId, &user_credit.ReferredBy, &user_credit.CreditsEarned, &user_credit.CreditsUsed, &user_credit.CreditsType, &user_credit.ExpiresAt, &user_credit.CreatedAt)
+	if err != nil {
+		return nil, obj.makeErr(err)
+	}
+
+	if __rows.Next() {
+		return nil, tooManyRows("UserCredit_By_OfferId")
+	}
+
+	if err := __rows.Err(); err != nil {
+		return nil, obj.makeErr(err)
+	}
+
+	return user_credit, nil
+
+}
+
 func (obj *postgresImpl) Update_PendingAudits_By_NodeId(ctx context.Context,
 	pending_audits_node_id PendingAudits_NodeId_Field,
 	update PendingAudits_Update_Fields) (
@@ -6960,6 +7225,16 @@ func (impl postgresImpl) isConstraintError(err error) (
 func (obj *postgresImpl) deleteAll(ctx context.Context) (count int64, err error) {
 	var __res sql.Result
 	var __count int64
+	__res, err = obj.driver.Exec("DELETE FROM user_credits;")
+	if err != nil {
+		return 0, obj.makeErr(err)
+	}
+
+	__count, err = __res.RowsAffected()
+	if err != nil {
+		return 0, obj.makeErr(err)
+	}
+	count += __count
 	__res, err = obj.driver.Exec("DELETE FROM used_serials;")
 	if err != nil {
 		return 0, obj.makeErr(err)
@@ -8918,6 +9193,81 @@ func (obj *sqlite3Impl) All_Offer(ctx context.Context) (
 
 }
 
+func (obj *sqlite3Impl) All_UserCredit(ctx context.Context) (
+	rows []*UserCredit, err error) {
+
+	var __embed_stmt = __sqlbundle_Literal("SELECT user_credits.user_id, user_credits.offer_id, user_credits.referred_by, user_credits.credits_earned, user_credits.credits_used, user_credits.credits_type, user_credits.expires_at, user_credits.created_at FROM user_credits")
+
+	var __values []interface{}
+	__values = append(__values)
+
+	var __stmt = __sqlbundle_Render(obj.dialect, __embed_stmt)
+	obj.logStmt(__stmt, __values...)
+
+	__rows, err := obj.driver.Query(__stmt, __values...)
+	if err != nil {
+		return nil, obj.makeErr(err)
+	}
+	defer __rows.Close()
+
+	for __rows.Next() {
+		user_credit := &UserCredit{}
+		err = __rows.Scan(&user_credit.UserId, &user_credit.OfferId, &user_credit.ReferredBy, &user_credit.CreditsEarned, &user_credit.CreditsUsed, &user_credit.CreditsType, &user_credit.ExpiresAt, &user_credit.CreatedAt)
+		if err != nil {
+			return nil, obj.makeErr(err)
+		}
+		rows = append(rows, user_credit)
+	}
+	if err := __rows.Err(); err != nil {
+		return nil, obj.makeErr(err)
+	}
+	return rows, nil
+
+}
+
+func (obj *sqlite3Impl) Get_UserCredit_By_OfferId(ctx context.Context,
+	user_credit_offer_id UserCredit_OfferId_Field) (
+	user_credit *UserCredit, err error) {
+
+	var __embed_stmt = __sqlbundle_Literal("SELECT user_credits.user_id, user_credits.offer_id, user_credits.referred_by, user_credits.credits_earned, user_credits.credits_used, user_credits.credits_type, user_credits.expires_at, user_credits.created_at FROM user_credits WHERE user_credits.offer_id = ? LIMIT 2")
+
+	var __values []interface{}
+	__values = append(__values, user_credit_offer_id.value())
+
+	var __stmt = __sqlbundle_Render(obj.dialect, __embed_stmt)
+	obj.logStmt(__stmt, __values...)
+
+	__rows, err := obj.driver.Query(__stmt, __values...)
+	if err != nil {
+		return nil, obj.makeErr(err)
+	}
+	defer __rows.Close()
+
+	if !__rows.Next() {
+		if err := __rows.Err(); err != nil {
+			return nil, obj.makeErr(err)
+		}
+		return nil, makeErr(sql.ErrNoRows)
+	}
+
+	user_credit = &UserCredit{}
+	err = __rows.Scan(&user_credit.UserId, &user_credit.OfferId, &user_credit.ReferredBy, &user_credit.CreditsEarned, &user_credit.CreditsUsed, &user_credit.CreditsType, &user_credit.ExpiresAt, &user_credit.CreatedAt)
+	if err != nil {
+		return nil, obj.makeErr(err)
+	}
+
+	if __rows.Next() {
+		return nil, tooManyRows("UserCredit_By_OfferId")
+	}
+
+	if err := __rows.Err(); err != nil {
+		return nil, obj.makeErr(err)
+	}
+
+	return user_credit, nil
+
+}
+
 func (obj *sqlite3Impl) Update_PendingAudits_By_NodeId(ctx context.Context,
 	pending_audits_node_id PendingAudits_NodeId_Field,
 	update PendingAudits_Update_Fields) (
@@ -10322,6 +10672,16 @@ func (impl sqlite3Impl) isConstraintError(err error) (
 func (obj *sqlite3Impl) deleteAll(ctx context.Context) (count int64, err error) {
 	var __res sql.Result
 	var __count int64
+	__res, err = obj.driver.Exec("DELETE FROM user_credits;")
+	if err != nil {
+		return 0, obj.makeErr(err)
+	}
+
+	__count, err = __res.RowsAffected()
+	if err != nil {
+		return 0, obj.makeErr(err)
+	}
+	count += __count
 	__res, err = obj.driver.Exec("DELETE FROM used_serials;")
 	if err != nil {
 		return 0, obj.makeErr(err)
@@ -10696,6 +11056,15 @@ func (rx *Rx) All_StoragenodeStorageTally_By_IntervalEndTime_GreaterOrEqual(ctx 
 		return
 	}
 	return tx.All_StoragenodeStorageTally_By_IntervalEndTime_GreaterOrEqual(ctx, storagenode_storage_tally_interval_end_time_greater_or_equal)
+}
+
+func (rx *Rx) All_UserCredit(ctx context.Context) (
+	rows []*UserCredit, err error) {
+	var tx *Tx
+	if tx, err = rx.getTx(ctx); err != nil {
+		return
+	}
+	return tx.All_UserCredit(ctx)
 }
 
 func (rx *Rx) Create_AccountingRollup(ctx context.Context,
@@ -11342,6 +11711,16 @@ func (rx *Rx) Get_StoragenodeStorageTally_By_Id(ctx context.Context,
 	return tx.Get_StoragenodeStorageTally_By_Id(ctx, storagenode_storage_tally_id)
 }
 
+func (rx *Rx) Get_UserCredit_By_OfferId(ctx context.Context,
+	user_credit_offer_id UserCredit_OfferId_Field) (
+	user_credit *UserCredit, err error) {
+	var tx *Tx
+	if tx, err = rx.getTx(ctx); err != nil {
+		return
+	}
+	return tx.Get_UserCredit_By_OfferId(ctx, user_credit_offer_id)
+}
+
 func (rx *Rx) Get_User_By_Email_And_Status_Not_Number(ctx context.Context,
 	user_email User_Email_Field) (
 	user *User, err error) {
@@ -11573,6 +11952,9 @@ type Methods interface {
 	All_StoragenodeStorageTally_By_IntervalEndTime_GreaterOrEqual(ctx context.Context,
 		storagenode_storage_tally_interval_end_time_greater_or_equal StoragenodeStorageTally_IntervalEndTime_Field) (
 		rows []*StoragenodeStorageTally, err error)
+
+	All_UserCredit(ctx context.Context) (
+		rows []*UserCredit, err error)
 
 	Create_AccountingRollup(ctx context.Context,
 		accounting_rollup_node_id AccountingRollup_NodeId_Field,
@@ -11880,6 +12262,10 @@ type Methods interface {
 	Get_StoragenodeStorageTally_By_Id(ctx context.Context,
 		storagenode_storage_tally_id StoragenodeStorageTally_Id_Field) (
 		storagenode_storage_tally *StoragenodeStorageTally, err error)
+
+	Get_UserCredit_By_OfferId(ctx context.Context,
+		user_credit_offer_id UserCredit_OfferId_Field) (
+		user_credit *UserCredit, err error)
 
 	Get_User_By_Email_And_Status_Not_Number(ctx context.Context,
 		user_email User_Email_Field) (

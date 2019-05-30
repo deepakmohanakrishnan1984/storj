@@ -217,6 +217,17 @@ CREATE TABLE used_serials (
 	storage_node_id bytea NOT NULL,
 	PRIMARY KEY ( serial_number_id, storage_node_id )
 );
+CREATE TABLE user_credits (
+	user_id bytea NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	offer_id integer NOT NULL REFERENCES offers( id ) ON DELETE CASCADE,
+	referred_by bytea NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+	credits_earned integer NOT NULL,
+	credits_used integer NOT NULL,
+	credits_type text NOT NULL,
+	expires_at timestamp with time zone NOT NULL,
+	created_at timestamp with time zone NOT NULL,
+	PRIMARY KEY ( user_id )
+);
 CREATE INDEX bucket_name_project_id_interval_start_interval_seconds ON bucket_bandwidth_rollups ( bucket_name, project_id, interval_start, interval_seconds );
 CREATE UNIQUE INDEX bucket_id_rollup ON bucket_usages ( bucket_id, rollup_end_time );
 CREATE INDEX node_last_ip ON nodes ( last_ip );

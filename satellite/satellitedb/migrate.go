@@ -719,6 +719,23 @@ func (db *DB) PostgresMigration() *migrate.Migration {
 					`ALTER TABLE projects ADD usage_limit bigint NOT NULL DEFAULT 0;`,
 				},
 			},
+			{
+				Description: "Create table for user credits",
+				Version:     25,
+				Action: migrate.SQL{`
+					CREATE TABLE user_credits (
+						user_id NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+						offer_id NOT NULL REFERENCES offers( id ) ON DELETE CASCADE,
+						referred_by NOT NULL REFERENCES users( id ) ON DELETE CASCADE,
+						credits_earned integer NOT NULL,
+						credits_used integer NOT NULL,
+						credits_type text NOT NULL,
+						expires_at timestamp with time zone NOT NULL,
+						created_at timestamp with time zone NOT NULL,
+						PRIMARY KEY ( user_id )
+						);`,
+				},
+			},
 		},
 	}
 }
